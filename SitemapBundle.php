@@ -17,7 +17,7 @@ use Bundle\SitemapBundle\Sitemap\Sitemap;
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
  */
-class Bundle extends BaseBundle {
+class SitemapBundle extends BaseBundle {
     public function buildContainer(ContainerInterface $container) {
         Loader::registerExtension(new SitemapExtension());
     }
