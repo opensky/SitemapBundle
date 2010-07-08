@@ -1,0 +1,49 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://www.symfony-project.org/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.symfony-project.org/schema/dic/services http://www.symfony-project.org/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="sitemap.request.parser.class">Bundle\SitemapBundle\Listener\RequestParser</parameter>
+        <parameter key="sitemap.response.filter.class">Bundle\SitemapBundle\Listener\ResponseFilter</parameter>
+        <parameter key="sitemap.url.class">Bundle\SitemapBundle\Sitemap\Url</parameter>
+        <parameter key="sitemap_exporter.class">Bundle\SitemapBundle\Sitemap\SitemapExporter</parameter>
+        <parameter key="sitemap_dumper.class">Bundle\SitemapBundle\Dumper\PHPDumper</parameter>
+        <parameter key="sitemap_dumper.file.class">%kernel.name%Sitemap</parameter>
+        <parameter key="sitemap_dumper.file.name">%kernel.cache_dir%/%sitemap_dumper.file.class%.php</parameter>
+        <parameter key="sitemap.class">Bundle\SitemapBundle\Sitemap\Sitemap</parameter>
+        <parameter key="sitemap.defaults" type="collection" />
+    </parameters>
+
+    <services>
+        <service id="sitemap.response.filter" class="%sitemap.response.filter.class%">
+            <annotation name="kernel.listener" />
+            <argument type="service" id="sitemap" />
+            <argument type="service" id="sitemap_dumper" />
+            <argument type="service" id="sitemap.current_url" on-invalid="null" />
+        </service>
+        <service id="sitemap.request.parser" class="%sitemap.request.parser.class%">
+            <annotation name="kernel.listener" />
+            <argument type="service" id="router" />
+            <argument type="service" id="sitemap" />
+            <argument type="service" id="service_container" />
+        </service>
+        <service id="sitemap.sitemap" class="%sitemap.class%">
+            <argument>%sitemap.defaults%</argument>
+            <call method="setUrlClass">
+                <argument>%sitemap.url.class%</argument>
+            </call>
+        </service>
+        <service id="sitemap.sitemap.dump" class="%sitemap_dumper.file.class%">
+            <argument>%sitemap.defaults%</argument>
+            <call method="setUrlClass">
+                <argument>%sitemap.url.class%</argument>
+            </call>
+        </service>
+        <service id="sitemap_dumper" class="%sitemap_dumper.class%">
+            <argument>%sitemap_dumper.file.name%</argument>
+            <argument>%sitemap_dumper.file.class%</argument>
+        </service>
+    </services>
+</container>
