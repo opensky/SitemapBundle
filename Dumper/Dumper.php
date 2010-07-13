@@ -13,6 +13,8 @@ use Bundle\SitemapBundle\Sitemap\Sitemap;
  * we might add more.
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 interface Dumper {
 

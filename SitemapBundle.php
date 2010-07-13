@@ -16,6 +16,8 @@ use Bundle\SitemapBundle\Sitemap\Sitemap;
  * Description of Bundle
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class SitemapBundle extends BaseBundle {
     public function buildContainer(ContainerInterface $container) {

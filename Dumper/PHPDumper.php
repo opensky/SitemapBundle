@@ -12,6 +12,8 @@ use Bundle\SitemapBundle\Sitemap\Sitemap;
  * PHPDumer is dumping prepared sitemap into a pre-cached php file.
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class PHPDumper implements Dumper {
 

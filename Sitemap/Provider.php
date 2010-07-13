@@ -16,6 +16,8 @@ namespace Bundle\SitemapBundle\Sitemap;
  * for each url the provider needs to include.
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 interface Provider {
     public function populate(Sitemap $sitemap);

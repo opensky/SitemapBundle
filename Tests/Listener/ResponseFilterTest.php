@@ -17,6 +17,8 @@ use Bundle\SitemapBundle\Sitemap\Url;
  * Description of ResponseFilterTest
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class ResponseFilterTest extends \PHPUnit_Framework_TestCase {
     protected $sitemap;

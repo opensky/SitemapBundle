@@ -17,6 +17,8 @@ use Bundle\SitemapBundle\Listener\RequestParser;
  * Description of RequestParserTest
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class RequestParserTest extends \PHPUnit_Framework_TestCase {
     protected $parser;

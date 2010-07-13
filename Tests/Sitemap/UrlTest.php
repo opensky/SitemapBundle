@@ -12,6 +12,8 @@ use Bundle\SitemapBundle\Sitemap\Url;
  * Description of UrlTest
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class UrlTest extends \PHPUnit_Framework_TestCase {
     /**

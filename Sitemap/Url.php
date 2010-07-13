@@ -10,6 +10,8 @@ namespace Bundle\SitemapBundle\Sitemap;
  * Url
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class Url {
     const

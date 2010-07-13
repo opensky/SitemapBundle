@@ -19,6 +19,8 @@ use Symfony\Components\HttpKernel\Exception\NotFoundHttpException;
  * sitemap.xml?page=<page_num>
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class SitemapController extends Controller {
     public function sitemapAction() {

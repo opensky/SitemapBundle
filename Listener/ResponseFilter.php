@@ -19,6 +19,8 @@ use Bundle\SitemapBundle\Sitemap\Url;
  * The listener that updates the current url lastmod attribute and re-dumps the sitemap
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class ResponseFilter {
 

@@ -35,6 +35,8 @@ use Symfony\Components\DependencyInjection\ContainerInterface;
  * current url is update with response's 'Last-Modified' header content.
  *
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
+ * @copyright The OpenSky Project Inc. 2010
+ * @link http://www.theopenskyproject.com/
  */
 class RequestParser {
 
