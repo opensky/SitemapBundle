@@ -7,7 +7,8 @@
 namespace Bundle\SitemapBundle;
 
 use Symfony\Components\DependencyInjection\ContainerInterface;
-use Symfony\Foundation\Bundle\Bundle as BaseBundle;
+use Symfony\Components\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Framework\Bundle\Bundle as BaseBundle;
 use Symfony\Components\DependencyInjection\Loader\Loader;
 use Bundle\SitemapBundle\DependencyInjection\SitemapExtension;
 use Bundle\SitemapBundle\Sitemap\Sitemap;
@@ -20,7 +21,7 @@ use Bundle\SitemapBundle\Sitemap\Sitemap;
  * @link http://www.theopenskyproject.com/
  */
 class SitemapBundle extends BaseBundle {
-    public function buildContainer(ContainerInterface $container) {
+    public function buildContainer(ParameterBagInterface $container) {
         Loader::registerExtension(new SitemapExtension());
     }
     public function boot(ContainerInterface $container) {

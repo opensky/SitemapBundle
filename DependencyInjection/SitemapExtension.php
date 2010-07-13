@@ -54,8 +54,6 @@ class SitemapExtension extends LoaderExtension {
         }
 
         $configuration->setParameter('sitemap.defaults', $defaults);
-
-        return $configuration;
     }
 
     /**
