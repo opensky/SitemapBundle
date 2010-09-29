@@ -11,6 +11,8 @@
 		<parameter key="sitemap_exporter.class">Bundle\SitemapBundle\Sitemap\SitemapExporter</parameter>
 		<parameter key="sitemap.dumper.odm.mongodb.class">Bundle\SitemapBundle\Dumper\Doctrine\ODM\MongoDB</parameter>
 		<parameter key="sitemap.sitemap.storage.odm.mongodb.class">Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB</parameter>
+		<parameter key="sitemap.sitemap.storage.odm.mongodb.collection">%kernel.name%_urls</parameter>
+		<parameter key="sitemap.sitemap.storage.odm.mongodb.db">sitemap</parameter>
 		<parameter key="sitemap.class">Bundle\SitemapBundle\Sitemap\Sitemap</parameter>
 		<parameter key="sitemap.defaults" type="collection" />
 		<parameter key="sitemap.listener.class">Bundle\SitemapBundle\Listener\SitemapListener</parameter>
@@ -33,8 +35,8 @@
 		<service id="sitemap.class_metadata" class="Doctrine\ODM\MongoDB\Mapping\ClassMetadata">
 			<argument type="constant">Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB::URL_CLASS</argument>
 			<call method="setAllowCustomId"><argument>true</argument></call>
-			<call method="setDB"><argument>sitemap</argument></call>
-			<call method="setCollection"><argument>urls</argument></call>
+			<call method="setDB"><argument>%sitemap.sitemap.storage.odm.mongodb.db%</argument></call>
+			<call method="setCollection"><argument>%sitemap.sitemap.storage.odm.mongodb.collection%</argument></call>
 			<call method="mapField">
 				<argument type="collection">
 					<argument key="fieldName">loc</argument>
