@@ -4,46 +4,67 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.symfony-project.org/schema/dic/services http://www.symfony-project.org/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="sitemap.request.parser.class">Bundle\SitemapBundle\Listener\RequestParser</parameter>
-        <parameter key="sitemap.response.filter.class">Bundle\SitemapBundle\Listener\ResponseFilter</parameter>
-        <parameter key="sitemap.url.class">Bundle\SitemapBundle\Sitemap\Url</parameter>
-        <parameter key="sitemap_exporter.class">Bundle\SitemapBundle\Sitemap\SitemapExporter</parameter>
-        <parameter key="sitemap_dumper.class">Bundle\SitemapBundle\Dumper\PHPDumper</parameter>
-        <parameter key="sitemap_dumper.file.class">%kernel.name%Sitemap</parameter>
-        <parameter key="sitemap_dumper.file.name">%kernel.cache_dir%/%sitemap_dumper.file.class%.php</parameter>
-        <parameter key="sitemap.class">Bundle\SitemapBundle\Sitemap\Sitemap</parameter>
-        <parameter key="sitemap.defaults" type="collection" />
-    </parameters>
+	<parameters>
+		<parameter key="sitemap.request.parser.class">Bundle\SitemapBundle\Listener\RequestParser</parameter>
+		<parameter key="sitemap.response.filter.class">Bundle\SitemapBundle\Listener\ResponseFilter</parameter>
+		<parameter key="sitemap.url.class">Bundle\SitemapBundle\Sitemap\Url</parameter>
+		<parameter key="sitemap_exporter.class">Bundle\SitemapBundle\Sitemap\SitemapExporter</parameter>
+		<parameter key="sitemap.dumper.odm.mongodb.class">Bundle\SitemapBundle\Dumper\Doctrine\ODM\MongoDB</parameter>
+		<parameter key="sitemap.sitemap.storage.odm.mongodb.class">Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB</parameter>
+		<parameter key="sitemap.class">Bundle\SitemapBundle\Sitemap\Sitemap</parameter>
+		<parameter key="sitemap.defaults" type="collection" />
+		<parameter key="sitemap.listener.class">Bundle\SitemapBundle\Listener\SitemapListener</parameter>
+	</parameters>
 
-    <services>
-        <service id="sitemap.response.filter" class="%sitemap.response.filter.class%">
-            <annotation name="kernel.listener" />
-            <argument type="service" id="sitemap" />
-            <argument type="service" id="sitemap_dumper" />
-            <argument type="service" id="sitemap.current_url" on-invalid="null" />
-        </service>
-        <service id="sitemap.request.parser" class="%sitemap.request.parser.class%">
-            <annotation name="kernel.listener" />
-            <argument type="service" id="router" />
-            <argument type="service" id="sitemap" />
-            <argument type="service" id="service_container" />
-        </service>
-        <service id="sitemap.sitemap" class="%sitemap.class%">
-            <argument>%sitemap.defaults%</argument>
-            <call method="setUrlClass">
-                <argument>%sitemap.url.class%</argument>
-            </call>
-        </service>
-        <service id="sitemap.sitemap.dump" class="%sitemap_dumper.file.class%">
-            <argument>%sitemap.defaults%</argument>
-            <call method="setUrlClass">
-                <argument>%sitemap.url.class%</argument>
-            </call>
-        </service>
-        <service id="sitemap_dumper" class="%sitemap_dumper.class%">
-            <argument>%sitemap_dumper.file.name%</argument>
-            <argument>%sitemap_dumper.file.class%</argument>
-        </service>
-    </services>
+	<services>
+		<service alias="sitemap.sitemap" id="sitemap" />
+		<service id="sitemap.sitemap" class="%sitemap.class%">
+			<argument type="service" id="sitemap.sitemap.storage.odm.mongodb" />
+			<argument>%sitemap.defaults%</argument>
+			<call method="setUrlClass">
+				<argument>%sitemap.url.class%</argument>
+			</call>
+		</service>
+		<service id="sitemap.dumper.odm.mongodb" class="%sitemap.dumper.odm.mongodb.class%" />
+		<service id="sitemap.sitemap.storage.odm.mongodb" class="%sitemap.sitemap.storage.odm.mongodb.class%">
+			<argument type="service" id="doctrine.odm.mongodb.document_manager" />
+			<argument type="service" id="sitemap.class_metadata" />
+		</service>
+		<service id="sitemap.class_metadata" class="Doctrine\ODM\MongoDB\Mapping\ClassMetadata">
+			<argument type="constant">Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB::URL_CLASS</argument>
+			<call method="setAllowCustomId"><argument>true</argument></call>
+			<call method="setDB"><argument>sitemap</argument></call>
+			<call method="setCollection"><argument>urls</argument></call>
+			<call method="mapField">
+				<argument type="collection">
+					<argument key="fieldName">loc</argument>
+					<argument key="type">custom_id</argument>
+					<argument key="id">true</argument>
+				</argument>
+			</call>
+			<call method="mapField">
+				<argument type="collection">
+					<argument key="fieldName">lastmod</argument>
+					<argument key="type">date</argument>
+				</argument>
+			</call>
+			<call method="mapField">
+				<argument type="collection">
+					<argument key="fieldName">changefreq</argument>
+					<argument key="type">string</argument>
+				</argument>
+			</call>
+			<call method="mapField">
+				<argument type="collection">
+					<argument key="fieldName">priority</argument>
+					<argument key="type">float</argument>
+				</argument>
+			</call>
+		</service>
+		<service id="sitemap.listener" class="%sitemap.listener.class%">
+            <tag name="kernel.listener" />
+			<argument type="service" id="sitemap.sitemap" />
+			<argument type="service" id="sitemap.dumper" />
+		</service>
+	</services>
 </container>

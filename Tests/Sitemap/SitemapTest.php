@@ -1,8 +1,4 @@
 <?php
-/*
- * This file is part of the SitemapBundle for Symfony2 framework
- * created by Bulat Shakirzyanov <mallluhuct@gmail.com>
- */
 
 namespace Bundle\SitemapBundle\Tests\Sitemap;
 
@@ -10,16 +6,25 @@ use Bundle\SitemapBundle\Sitemap\Sitemap;
 use Bundle\SitemapBundle\Sitemap\Url;
 
 /**
+ * SitemapTest
+ *
+ * @package OpenSky SitemapBundle
+ * @version $Id$
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
- * @copyright The OpenSky Project Inc. 2010
- * @link http://www.theopenskyproject.com/
+ * @copyright (c) 2010 OpenSky Project Inc
+ * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
-class SitemapTest extends \PHPUnit_Framework_TestCase {
-    public function testNoUrls() {
+class SitemapTest extends \PHPUnit_Framework_TestCase
+{
+
+    public function testNoUrls()
+    {
         $sitemap = $this->getSitemap();
         $this->assertEquals(0, count($sitemap->getUrls()));
     }
-    public function testAddUrl() {
+
+    public function testAddUrl()
+    {
         $sitemap = $this->getSitemap();
         $sitemap->add('http://www.example.org/', array(
             'lastmod' => new \DateTime(),
@@ -28,65 +33,77 @@ class SitemapTest extends \PHPUnit_Framework_TestCase {
         ));
         $this->assertEquals(1, count($sitemap->getUrls()));
     }
-    public function testAddGetsUrl() {
+
+    public function testAddGetsUrl()
+    {
         $sitemap = $this->getSitemap();
         $lastMod = new \DateTime();
         $url = $sitemap->add('http://www.example.org/', array(
-            'lastmod' => $lastMod,
-            'changefreq' => Url::DAILY,
-            'priority' => 1.0,
-        ));
+                'lastmod' => $lastMod,
+                'changefreq' => Url::DAILY,
+                'priority' => 1.0,
+            ));
         $this->assertUrlProperties(array(
-            'loc'        => 'http://www.example.org/',
-            'lastmod'    => $lastMod,
+            'loc' => 'http://www.example.org/',
+            'lastmod' => date(Url::LASTMOD_FORMAT, $lastMod->getTimestamp()),
             'changefreq' => 'daily',
-            'priority'   => 1.0,
-        ), $url);
+            'priority' => 1.0,
+            ), $url);
     }
+
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testThrowsOnInvalidUrlClass() {
+    public function testThrowsOnInvalidUrlClass()
+    {
         $sitemap = $this->getSitemap();
         $sitemap->setUrlClass(get_class($this));
     }
-    public function testGetUrlClass() {
+
+    public function testGetUrlClass()
+    {
         $sitemap = $this->getSitemap();
         $sitemap->setUrlClass('Bundle\SitemapBundle\Sitemap\Url');
         $this->assertEquals('Bundle\SitemapBundle\Sitemap\Url', $sitemap->getUrlClass());
     }
-    public function testAddsDefaultInfo() {
+
+    public function testAddsDefaultInfo()
+    {
         $sitemap = $this->getSitemap(array(
-            'changefreq' => 'monthly',
-            'lastmod'    => new \DateTime('2006-01-01'),
-            'priority'   => 0.1,
-        ));
+                'changefreq' => 'monthly',
+                'lastmod' => new \DateTime('2006-01-01'),
+                'priority' => 0.1,
+            ));
         $url = $sitemap->add('http://www.google.com/', array());
         $this->assertUrlProperties(array(
-            'loc'        => 'http://www.google.com/',
+            'loc' => 'http://www.google.com/',
             'changefreq' => 'monthly',
-            'lastmod'    => new \DateTime('2006-01-01'),
-            'priority'   => 0.1,
-        ), $url);
+            'lastmod' => '2006-01-01',
+            'priority' => 0.1,
+            ), $url);
     }
-    public function testAppendsDefaultInfo() {
+
+    public function testAppendsDefaultInfo()
+    {
         $sitemap = $this->getSitemap(array(
-            'changefreq' => 'monthly',
-            'lastmod'    => new \DateTime('2006-01-01'),
-            'priority'   => 0.1,
-        ));
+                'changefreq' => 'monthly',
+                'lastmod' => new \DateTime('2006-01-01'),
+                'priority' => 0.1,
+            ));
         $url = $sitemap->add('http://www.google.com/', array(
-            'lastmod'    => new \DateTime('2010-01-01'),
-            'priority'   => 0.6,
-        ));
+                'lastmod' => new \DateTime('2010-01-01'),
+                'priority' => 0.6,
+            ));
         $this->assertUrlProperties(array(
-            'loc'        => 'http://www.google.com/',
+            'loc' => 'http://www.google.com/',
             'changefreq' => 'monthly',
-            'lastmod'    => new \DateTime('2010-01-01'),
-            'priority'   => 0.6,
-        ), $url);
+            'lastmod' => '2010-01-01',
+            'priority' => 0.6,
+            ), $url);
     }
-    public function testGetUrl() {
+
+    public function testGetUrl()
+    {
         $now = new \DateTime();
         $sitemap = $this->getSitemap();
         $sitemap->add('http://www.example.org/', array(
@@ -100,35 +117,46 @@ class SitemapTest extends \PHPUnit_Framework_TestCase {
             'priority' => 0.8,
         ));
         $this->assertUrlProperties(array(
-            'loc'        => 'http://www.example.org/',
-            'lastmod'    => $now,
+            'loc' => 'http://www.example.org/',
+            'lastmod' => date(Url::LASTMOD_FORMAT, $now->getTimestamp()),
             'changefreq' => Url::MONTHLY,
-            'priority'   => 1.0,
-        ), $sitemap->get('http://www.example.org/'));
+            'priority' => 1.0,
+            ), $sitemap->get('http://www.example.org/'));
     }
-    public function testGetUrlReturnsNullIfNoFound() {
+
+    public function testGetUrlReturnsNullIfNoFound()
+    {
         $sitemap = $this->getSitemap();
         $this->assertNull($sitemap->get('http://www.example.org'));
     }
-    public function testHasReturnsFalseOnNonExistentRoute() {
+
+    public function testHasReturnsFalseOnNonExistentRoute()
+    {
         $this->assertFalse($this->getSitemap()->has('http://www.google.com/'));
     }
-    public function testReturnsTrueOnExistentUrl() {
+
+    public function testReturnsTrueOnExistentUrl()
+    {
         $sitemap = $this->getSitemap();
         $sitemap->add('http://www.google.com/', array(
-            'lastmod'    => new \DateTime('2010-01-01'),
-            'priority'   => 0.6,
+            'lastmod' => new \DateTime('2010-01-01'),
+            'priority' => 0.6,
         ));
         $this->assertTrue($sitemap->has('http://www.google.com/'));
     }
-    public function getSitemap(array $options = array()) {
-        return new Sitemap($options);
+
+    public function getSitemap(array $options = array())
+    {
+        return new Sitemap(new \Bundle\SitemapBundle\Sitemap\Storage\Memory(), $options);
     }
-    public function assertUrlProperties(array $properties, Url $url, $message = 'Url properties didn\'t match specification') {
+
+    protected function assertUrlProperties(array $properties, Url $url, $message = 'Url properties didn\'t match specification')
+    {
         foreach (array('loc', 'lastmod', 'changefreq', 'priority') as $prop) {
-            if (isset ($properties[$prop]) && $properties[$prop] != $url->{'get' . ucfirst($prop)}()) {
-                $this->fail($message . PHP_EOL .'property: ' . $prop . PHP_EOL . 'expected: ' . print_r($properties[$prop], true) . PHP_EOL . 'actual: ' . print_r($url->{'get' . ucfirst($prop)}(), true));
+            if (isset($properties[$prop]) && $properties[$prop] != $url->{'get' . ucfirst($prop)} ()) {
+                $this->fail($message . PHP_EOL . 'property: ' . $prop . PHP_EOL . 'expected: ' . print_r($properties[$prop], true) . PHP_EOL . 'actual: ' . print_r($url->{'get' . ucfirst($prop)} (), true));
             }
         }
     }
+
 }

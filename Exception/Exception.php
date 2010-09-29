@@ -1,11 +1,9 @@
 <?php
 
-namespace Bundle\SitemapBundle;
-
-use Symfony\Component\HttpKernel\Bundle\Bundle as BaseBundle;
+namespace Bundle\SitemapBundle\Exception;
 
 /**
- * SitemapBundle
+ * Exception
  *
  * @package OpenSky SitemapBundle
  * @version $Id$
@@ -13,6 +11,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle as BaseBundle;
  * @copyright (c) 2010 OpenSky Project Inc
  * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
-class SitemapBundle extends BaseBundle
+interface Exception
 {
 }

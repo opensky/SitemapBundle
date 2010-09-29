@@ -1,59 +1,73 @@
 <?php
-/*
- * This file is part of the SitemapBundle for Symfony2 framework
- * created by Bulat Shakirzyanov <mallluhuct@gmail.com>
- */
 
 namespace Bundle\SitemapBundle\Tests\Sitemap;
 
 use Bundle\SitemapBundle\Sitemap\Url;
 
 /**
- * Description of UrlTest
+ * UrlTest
  *
+ * @package OpenSky SitemapBundle
+ * @version $Id$
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
- * @copyright The OpenSky Project Inc. 2010
- * @link http://www.theopenskyproject.com/
+ * @copyright (c) 2010 OpenSky Project Inc
+ * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
-class UrlTest extends \PHPUnit_Framework_TestCase {
+class UrlTest extends \PHPUnit_Framework_TestCase
+{
+
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException Bundle\SitemapBundle\Exception\InvalidArgumentException
      */
-    public function testThrowsOnInvalidUrl() {
+    public function testThrowsOnInvalidUrl()
+    {
         new Url('somdasdasd');
     }
-    public function testGetLoc() {
+
+    public function testGetLoc()
+    {
         $url = new Url('http://www.example.org/');
         $this->assertEquals('http://www.example.org/', $url->getLoc());
     }
-    public function testSetLastmod() {
+
+    public function testSetLastmod()
+    {
         $url = new Url('http://www.example.org/');
         $now = new \DateTime();
         $url->setLastmod($now);
-        $this->assertEquals($now, $url->getLastmod());
+        $this->assertEquals(date(Url::LASTMOD_FORMAT, $now->getTimestamp()), $url->getLastmod());
     }
+
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException Bundle\SitemapBundle\Exception\InvalidArgumentException
      */
-    public function testThrowsOnInvalidChangefreq() {
+    public function testThrowsOnInvalidChangefreq()
+    {
         $url = new Url('http://www.example.org/');
         $url->setChangefreq('somefreq');
     }
-    public function testGetChangefreq() {
+
+    public function testGetChangefreq()
+    {
         $url = new Url('http://www.example.org/');
         $url->setChangefreq(Url::DAILY);
         $this->assertEquals(Url::DAILY, $url->getChangefreq());
     }
-    public function testGetPriority() {
+
+    public function testGetPriority()
+    {
         $url = new Url('http://www.example.org/');
         $url->setPriority(1.0);
         $this->assertEquals(1.0, $url->getPriority());
     }
+
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException Bundle\SitemapBundle\Exception\InvalidArgumentException
      */
-    public function testThrowsOnInvalidPriority() {
+    public function testThrowsOnInvalidPriority()
+    {
         $url = new Url('http://www.example.org/');
         $url->setPriority(2.0);
     }
+
 }

@@ -1,23 +1,19 @@
 <?php
-/*
- * This file is part of the SitemapBundle for Symfony2 framework
- * created by Bulat Shakirzyanov <mallluhuct@gmail.com>
- */
 
 namespace Bundle\SitemapBundle\Dumper;
 
 use Bundle\SitemapBundle\Sitemap\Sitemap;
 
 /**
- * Sitemap Dumper interface, PHP is the only one supported right now, but
- * we might add more.
+ * Dumper
  *
+ * @package OpenSky SitemapBundle
+ * @version $Id$
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
- * @copyright The OpenSky Project Inc. 2010
- * @link http://www.theopenskyproject.com/
+ * @copyright (c) 2010 OpenSky Project Inc
+ * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
-interface Dumper {
-
+interface Dumper
+{
     public function dump(Sitemap $sitemap);
-
 }

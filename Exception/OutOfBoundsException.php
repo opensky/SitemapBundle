@@ -1,11 +1,11 @@
 <?php
 
-namespace Bundle\SitemapBundle;
+namespace Bundle\SitemapBundle\Exception;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle as BaseBundle;
+use OutOfBoundsException as BaseOutOfBoundsException;
 
 /**
- * SitemapBundle
+ * OutOfBoundsException
  *
  * @package OpenSky SitemapBundle
  * @version $Id$
@@ -13,6 +13,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle as BaseBundle;
  * @copyright (c) 2010 OpenSky Project Inc
  * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
-class SitemapBundle extends BaseBundle
+class OutOfBoundsException extends BaseOutOfBoundsException implements Exception
 {
 }

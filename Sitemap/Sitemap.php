@@ -1,27 +1,42 @@
 <?php
-/*
- * This file is part of the SitemapBundle for Symfony2 framework
- * created by Bulat Shakirzyanov <mallluhuct@gmail.com>
- */
 
 namespace Bundle\SitemapBundle\Sitemap;
 
+use Bundle\SitemapBundle\Sitemap\Storage\Storage;
+
 /**
- * The sitemap service
+ * Sitemap
  *
+ * @package OpenSky SitemapBundle
+ * @version $Id$
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
- * @copyright The OpenSky Project Inc. 2010
- * @link http://www.theopenskyproject.com/
+ * @copyright (c) 2010 OpenSky Project Inc
+ * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
-class Sitemap {
+class Sitemap
+{
+    const DEFAULT_URL_CLASS = 'Bundle\SitemapBundle\Sitemap\Url';
 
-    const ENTRIES_LIMIT = 50000;
-
-    protected $urls = array();
-    protected $urlClass = 'Bundle\SitemapBundle\Sitemap\Url';
+    /**
+     * @var string
+     */
+    protected $urlClass = self::DEFAULT_URL_CLASS;
+    /**
+     * @var array
+     */
     protected $defaults = array();
+    /**
+     * @var Bundle\SitemapBundle\Sitemap\Storage\Storage
+     */
+    protected $storage;
 
-    public function __construct(array $defaults = array()) {
+    /**
+     * @param Bundle\SitemapBundle\Sitemap\Storage\Storage $storage
+     * @param array $defaults
+     */
+    public function __construct(Storage $storage, array $defaults = array())
+    {
+        $this->storage = $storage;
         foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
             if (isset($defaults[$prop])) {
                 $this->defaults[$prop] = $defaults[$prop];
@@ -29,41 +44,85 @@ class Sitemap {
         }
     }
 
-    public function getUrls() {
-        return $this->urls;
+    /**
+     * @return int
+     */
+    public function getTotalPages()
+    {
+        return $this->storage->getTotalPages();
     }
 
-    public function add($loc, array $info) {
+    /**
+     * @param int $page
+     * @return \Traversable<Bundle\SitemapBundle\Sitemap\Url>
+     */
+    public function getUrls($page = 1)
+    {
+        return $this->storage->find($page);
+    }
+
+    /**
+     * @param string $loc
+     * @param array $info
+     * @return Bundle\SitemapBundle\Sitemap\Url
+     */
+    public function add($loc, array $info)
+    {
         $info = array_merge($this->defaults, $info);
         $urlClass = $this->getUrlClass();
         $url = new $urlClass($loc);
         foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
-            if (isset ($info[$prop])) {
+            if (isset($info[$prop])) {
                 $url->{'set' . ucfirst($prop)}($info[$prop]);
             }
         }
-        $this->urls[$loc] = $url;
-        ksort($this->urls);
+        $this->storage->save($url);
         return $url;
     }
 
-    public function get($loc) {
-        return $this->has($loc) ? $this->urls[$loc] : null;
+    /**
+     * @param string $loc
+     * @return Bundle\SitemapBundle\Sitemap\Url|null
+     */
+    public function get($loc)
+    {
+        return $this->storage->findOne($loc);
     }
 
-    public function has($loc) {
-        return isset($this->urls[$loc]);
+    /**
+     * @param string $loc
+     * @return boolean
+     */
+    public function has($loc)
+    {
+        return ($this->get($loc) !== null);
     }
 
-    public function setUrlClass($class) {
-        if ($class !== 'Bundle\SitemapBundle\Sitemap\Url' && ( ! class_exists($class) || ! is_subclass_of($class, 'Bundle\SitemapBundle\Sitemap\Url'))) {
-            throw new \InvalidArgumentException('Class ' . $class . ' doesn\'t exist or is not instance of Bundle\SitemapBundle\Sitemap\Url');
+    /**
+     * @param string $class
+     */
+    public function setUrlClass($class)
+    {
+        if ($class !== self::DEFAULT_URL_CLASS && (!class_exists($class) || !is_subclass_of($class, self::DEFAULT_URL_CLASS))) {
+            throw new \InvalidArgumentException('Class ' . $class . ' doesn\'t exist or is not instance of ' . self::DEFAULT_URL_CLASS);
         }
         $this->urlClass = $class;
     }
 
-    public function getUrlClass() {
+    /**
+     * @return string
+     */
+    public function getUrlClass()
+    {
         return $this->urlClass;
+    }
+
+    /**
+     * @return Bundle\SitemapBundle\Sitemap\Storage\Storage
+     */
+    public function getStorage()
+    {
+        return $this->storage;
     }
 
 }
