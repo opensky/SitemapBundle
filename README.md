@@ -1,3 +1,5 @@
+# Adding bundle to Kernel
+
 This bundle will help with sitemap generation in your Symfony2 based projects.
 To enable the sitemap bundle, add it to you kernel registerBundles() method:
 
@@ -14,6 +16,8 @@ To enable the sitemap bundle, add it to you kernel registerBundles() method:
         }
     }
 
+# Enabling the services
+
 The second step is to enable its DependencyInjection extension in your config.yml:
 
     sitemap.config:
@@ -21,6 +25,8 @@ The second step is to enable its DependencyInjection extension in your config.ym
       default_changefreq: monthly
       default_priority:   0.5
       driver:             odm.mongodb
+
+# Writing custom url providers for *sitemap:generate* command
 
 The third step is to write your url providers to populate the 'sitemap' with
 existing urls, e.g:
@@ -60,6 +66,24 @@ existing urls, e.g:
         }
     }
 
+And register your provider in DIC like this:
+
+    <service id="forum.sitemap.provider" class="My\ForumBundle\ForumTopicProvider">
+        <tag name="sitemap.provider" />
+        <argument type="service" id="forum.document_repository.topic" />
+        <argument type="service" id="router" />
+    </service>
+
+After providers are in place and registered, time to run the generation command:
+
+    > php forum/console sitemap:generate
+
+or simply:
+
+    > php forum/console sitemap:g
+
+# Creating/Updating sitemap urls in the application
+
 After the three steps were completed, you can use Symfony2's native 'event_dispatcher'
 service to let the 'sitemap' know of new url:
 
@@ -75,6 +99,8 @@ or existing url updates:
         'loc'        => $router->generate('user_view', array('id' => $user->getId())),
         'priority'   => '0.6',
     )));
+
+# Enabling sitemap routes
 
 The last and most important step is to enable sitemap routing in your routing.yml:
 
