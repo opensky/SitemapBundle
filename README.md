@@ -26,6 +26,23 @@ The second step is to enable its DependencyInjection extension in your config.ym
       default_priority:   0.5
       driver:             odm.mongodb
 
+In the example above, we enabled the sitemap with `odm.mongodb` driver, which means that you have to add `DoctrineMongoDBBundle` to your Kernel and register its configuration like so:
+
+    doctrine_odm.mongodb:
+      auto_generate_proxy_classes: true
+      default_document_manager: default
+      default_connection: mongodb
+      cache_driver: array
+      metadata_cache_driver: array
+      default_database: opensky
+      proxy_namespace: Proxies
+      document_managers:
+        default:
+          connection: mongodb
+      connections:
+        mongodb:
+          server: localhost:27017
+
 # Writing custom url providers for *sitemap:generate* command
 
 The third step is to write your url providers to populate the 'sitemap' with
@@ -33,7 +50,7 @@ existing urls, e.g:
 
     <?php
 
-    namespace My\ForumBundle;
+    namespace My\ForumBundle\Sitemap;
 
     use Bundle\SitemapBundle\Sitemap\Provider as SitemapProvider;
     use Bundle\SitemapBundle\Sitemap\Sitemap;
