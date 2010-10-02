@@ -73,7 +73,7 @@ existing urls, e.g:
             foreach ($this->topicRepository->find() as $topic) {
                 $sitemap->add($this->router->generate('topic_view', array(
                         'id' => $topic->getId(),
-                    )), array(
+                    ), true), array(
                         'changefreq' => \Bundle\SitemapBundle\Sitemap\Url::MONTHLY,
                         'lastmod'    => $seller->getUpdatedAt(),
                         'priority'   => '0.8',
@@ -82,6 +82,8 @@ existing urls, e.g:
             }
         }
     }
+
+**NOTE:** in the above example, we use router to generate absolute urls. Since you don't have knowledge of your current domain in the CLI mode (the mode, where commands are run), router will still generate relative urls. You have to make the host a container parameter, that you will then use inside of your sitemap provider.
 
 And register your provider in DIC like this:
 
