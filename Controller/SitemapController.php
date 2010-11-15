@@ -37,7 +37,7 @@ class SitemapController extends Controller
     public function sitemapAction()
     {
 
-        $page = $this->getPage($this['request']->query);
+        $page = $this->getPage($this->get('request')->query);
         return $this->generateResponse('sitemap', array(
             'urls' => $this->getUrls($page),
             'page' => $page,
@@ -92,7 +92,7 @@ class SitemapController extends Controller
      */
     protected function getTemplating()
     {
-        return $this['templating'];
+        return $this->get('templating');
     }
 
     /**
@@ -101,7 +101,7 @@ class SitemapController extends Controller
      */
     protected function getSitemap()
     {
-        return $this['sitemap'];
+        return $this->get('sitemap');
     }
 
     /**
@@ -109,7 +109,7 @@ class SitemapController extends Controller
      */
     protected function getRouter()
     {
-        return $this['router'];
+        return $this->get('router');
     }
 
     /**
@@ -125,7 +125,7 @@ class SitemapController extends Controller
      */
     protected function getResponse()
     {
-        return $this['response'];
+        return $this->get('response');
     }
 
 }
