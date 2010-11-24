@@ -20,12 +20,12 @@ class MongoDB implements Dumper
 
     /**
      * ${@inheritDoc}
+     * @todo - remove the Sitemap URLs from document manager
      */
     public function dump(Sitemap $sitemap)
     {
         $dm = $this->getDocumentManager($sitemap);
-        $dm->flush();
-        $dm->clear();
+        $dm->flush(array('safe' => true));
     }
 
     /**
