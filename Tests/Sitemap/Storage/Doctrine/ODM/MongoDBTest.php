@@ -108,11 +108,11 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Doctrine\ODM\MongoDB\MongoCursor
+     * @return Doctrine\ODM\MongoDB\Cursor
      */
     protected function getMongoCursorMock()
     {
-        return $this->getMock('Doctrine\ODM\MongoDB\MongoCursor', array('count', 'current', 'next', 'key', 'value', 'rewind', 'skip', 'limit'), array(), '', false, false);
+        return $this->getMock('Doctrine\ODM\MongoDB\Cursor', array('count', 'current', 'next', 'key', 'value', 'rewind', 'skip', 'limit'), array(), '', false, false);
     }
 
     /**
