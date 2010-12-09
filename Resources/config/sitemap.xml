@@ -34,7 +34,7 @@
 		</service>
 		<service id="sitemap.class_metadata" class="Doctrine\ODM\MongoDB\Mapping\ClassMetadata">
 			<argument type="constant">Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB::URL_CLASS</argument>
-			<call method="setDB"><argument>%sitemap.sitemap.storage.odm.mongodb.db%</argument></call>
+			<call method="setDatabase"><argument>%sitemap.sitemap.storage.odm.mongodb.db%</argument></call>
 			<call method="setCollection"><argument>%sitemap.sitemap.storage.odm.mongodb.collection%</argument></call>
 			<call method="mapField">
 				<argument type="collection">
