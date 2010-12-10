@@ -48,7 +48,7 @@ class SitemapListener
 
     public function update(Event $event)
     {
-        $urlLoc = $event->getParameter('loc');
+        $urlLoc = $event->get('loc');
 
         if (!$this->sitemap->has($urlLoc)) {
             throw new Exception\OutOfBoundsException('Url ' . $urlLoc . ' could not be found.');
@@ -67,9 +67,9 @@ class SitemapListener
 
     public function create(Event $event)
     {
-        $this->sitemap->add($event->getParameter('loc'), array(
-            'changefreq' => ($event->hasParameter('changefreq') ? $event->getParameter('changefreq') : Url::YEARLY),
-            'priority' => ($event->hasParameter('priority') ? $event->getParameter('priority') : self::DEFAULT_PRIORITY),
+        $this->sitemap->add($event->get('loc'), array(
+            'changefreq' => ($event->has('changefreq') ? $event->get('changefreq') : Url::YEARLY),
+            'priority' => ($event->has('priority') ? $event->get('priority') : self::DEFAULT_PRIORITY),
             'lastmod' => new \DateTime(),
         ));
 
