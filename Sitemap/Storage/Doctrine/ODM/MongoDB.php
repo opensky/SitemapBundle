@@ -35,13 +35,11 @@ class MongoDB implements Storage
     /**
      * Constructor.
      *
-     * @param Doctrine\ODM\MongoDB\DocumentManager    $dm
-     * @param Doctrine\ODM\MongoDB\DocumentRepository $r
+     * @param Doctrine\ODM\MongoDB\DocumentManager $dm
      */
-    public function __construct(DocumentManager $dm, DocumentRepository $r)
+    public function __construct(DocumentManager $dm)
     {
-        $this->dm         = $dm;
-        $this->repository = $r;
+        $this->dm = $dm;
     }
 
     /**
@@ -53,6 +51,16 @@ class MongoDB implements Storage
     public function register(ClassMetadata $cm, ClassMetadataFactory $cmf)
     {
         $cmf->setMetadataFor(self::URL_CLASS, $cm);
+    }
+
+    /**
+     * Sets the DocumentRepository.
+     *
+     * @param Doctrine\ODM\MongoDB\DocumentRepository $repository
+     */
+    public function setRepository(DocumentRepository $repository)
+    {
+        $this->repository = $repository;
     }
 
     /**

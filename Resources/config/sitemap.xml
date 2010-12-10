@@ -30,16 +30,16 @@
         <service id="sitemap.dumper.odm.mongodb" class="%sitemap.dumper.odm.mongodb.class%" />
         <service id="sitemap.sitemap.storage.odm.mongodb" class="%sitemap.sitemap.storage.odm.mongodb.class%">
             <argument type="service" id="doctrine.odm.mongodb.document_manager" />
-            <argument type="service">
-                <service factory-service="doctrine.odm.mongodb.document_manager" factory-method="getRepository">
-                    <argument type="constant">Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB::URL_CLASS</argument>
-                </service>
-            </argument>
             <call method="register">
                 <argument type="service" id="sitemap.class_metadata" />
                 <argument type="service">
                     <service factory-service="doctrine.odm.mongodb.document_manager" factory-method="getMetadataFactory" />
                 </argument>
+            </call>
+            <call method="setRepository">
+                <service factory-service="doctrine.odm.mongodb.document_manager" factory-method="getRepository">
+                    <argument type="constant">Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB::URL_CLASS</argument>
+                </service>
             </call>
         </service>
         <service id="sitemap.class_metadata" class="Doctrine\ODM\MongoDB\Mapping\ClassMetadata">

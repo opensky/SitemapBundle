@@ -24,7 +24,9 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
     {
         $this->dm         = $this->getDocumentManagerMock();
         $this->repository = $this->getDocumentRepositoryMock();
-        $this->storage    = new MongoDB($this->dm, $this->repository);
+        $this->storage    = new MongoDB($this->dm);
+
+        $this->storage->setRepository($this->repository);
     }
 
     public function tearDown()
