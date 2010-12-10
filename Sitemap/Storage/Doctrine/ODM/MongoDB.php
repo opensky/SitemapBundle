@@ -5,7 +5,9 @@ namespace Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM;
 use Bundle\SitemapBundle\Sitemap\Url;
 use Bundle\SitemapBundle\Sitemap\Storage\Storage;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Doctrine\ODM\MongoDB\DocumentRepository;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
+use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 
 /**
  * MongoDB
@@ -26,22 +28,31 @@ class MongoDB implements Storage
     protected $dm;
 
     /**
-     * @param Doctrine\ODM\MongoDB\DocumentManager $dm
+     * @var Doctrine\ODM\MongoDB\DocumentRepository
      */
-    public function __construct(DocumentManager $dm, ClassMetadata $metadata)
+    protected $repository;
+
+    /**
+     * Constructor.
+     *
+     * @param Doctrine\ODM\MongoDB\DocumentManager    $dm
+     * @param Doctrine\ODM\MongoDB\DocumentRepository $r
+     */
+    public function __construct(DocumentManager $dm, DocumentRepository $r)
     {
-        $this->dm = $dm;
-        $this->dm->getMetadataFactory()->setMetadataFor(self::URL_CLASS, $metadata);
+        $this->dm         = $dm;
+        $this->repository = $r;
     }
 
     /**
-     * Returns total number of pages in the sitemap
+     * Registers ClassMetadata with a ClassMetadataFactory.
      *
-     * @return int
+     * @param Doctrine\ODM\MongoDB\Mapping\ClassMetadata        $cm;
+     * @param Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory $cmf;
      */
-    public function getTotalPages()
+    public function register(ClassMetadata $cm, ClassMetadataFactory $cmf)
     {
-        return ceil($this->dm->find(self::URL_CLASS)->count() / self::PAGE_LIMIT);
+        $cmf->setMetadataFor(self::URL_CLASS, $cm);
     }
 
     /**
@@ -52,7 +63,7 @@ class MongoDB implements Storage
      */
     public function findOne($loc)
     {
-        return $this->dm->find(self::URL_CLASS, $loc);
+        return $this->repository->find($loc);
     }
 
     /**
@@ -63,13 +74,25 @@ class MongoDB implements Storage
      */
     public function find($page)
     {
-        return $this->dm->find(self::URL_CLASS)->skip($this->getSkip($page))->limit(self::PAGE_LIMIT);
+        return $this->repository->findAll()
+            ->skip($this->getSkip($page))
+            ->limit(self::PAGE_LIMIT);
+    }
+
+    /**
+     * Returns total number of pages in the sitemap
+     *
+     * @return int
+     */
+    public function getTotalPages()
+    {
+        return ceil($this->repository->findAll()->count() / self::PAGE_LIMIT);
     }
 
     /**
      * Persists Url in DocumentManager, does not call flush
      *
-     * @param Url $url
+     * @param \Bundle\SitemapBundle\Sitemap\Url $url
      */
     public function save(Url $url)
     {
@@ -82,6 +105,14 @@ class MongoDB implements Storage
     public function getDocumentManager()
     {
         return $this->dm;
+    }
+
+    /**
+     * @return Doctrine\ODM\MongoDB\DocumentRepository
+     */
+    public function getDocumentRepository()
+    {
+        return $this->repository;
     }
 
     private function getSkip($page)

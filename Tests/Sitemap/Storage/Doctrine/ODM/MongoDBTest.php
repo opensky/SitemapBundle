@@ -3,8 +3,6 @@
 namespace Bundle\SitemapBundle\Tests\Sitemap\Storage\Doctrine\ODM;
 
 use Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB;
-use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
-use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 use Bundle\SitemapBundle\Sitemap\Url;
 
 /**
@@ -20,17 +18,30 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
 {
     protected $storage;
     protected $dm;
+    protected $repository;
 
     public function setUp()
     {
-        $this->dm = $this->getDocumentManagerMock();
-        $metadata = $this->getClassMetadata();
-        $this->storage = new MongoDB($this->dm, $metadata);
+        $this->dm         = $this->getDocumentManagerMock();
+        $this->repository = $this->getDocumentRepositoryMock();
+        $this->storage    = new MongoDB($this->dm, $this->repository);
     }
 
     public function tearDown()
     {
-        unset($this->storage, $this->dm);
+        unset($this->storage, $this->repository, $this->dm);
+    }
+
+    public function testRegister()
+    {
+        $classMetadata        = $this->getClassMetadataMock();
+        $classMetadataFactory = $this->getClassMetadataFactoryMock();
+
+        $classMetadataFactory->expects($this->once())
+            ->method('setMetadataFor')
+            ->with(MongoDB::URL_CLASS, $classMetadata);
+
+        $this->storage->register($classMetadata, $classMetadataFactory);
     }
 
     /**
@@ -38,10 +49,9 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     public function testFindOne($location, $result)
     {
-
-        $this->dm->expects($this->once())
+        $this->repository->expects($this->once())
             ->method('find')
-            ->with(MongoDB::URL_CLASS, $location)
+            ->with($location)
             ->will($this->returnValue($result));
 
         $this->assertSame($result, $this->storage->findOne($location));
@@ -50,9 +60,9 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
     public function testFind()
     {
         $expectedNumberOfResults = 5;
-        $page = 1;
+        $page                    = 1;
+        $cursor                  = $this->getMongoCursorMock();
 
-        $cursor = $this->getMongoCursorMock();
         $cursor->expects($this->once())
             ->method('skip')
             ->with(($page - 1) * MongoDB::PAGE_LIMIT)
@@ -65,9 +75,8 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
             ->method('count')
             ->will($this->returnValue($expectedNumberOfResults));
 
-        $this->dm->expects($this->once())
-            ->method('find')
-            ->with(MongoDB::URL_CLASS)
+        $this->repository->expects($this->once())
+            ->method('findAll')
             ->will($this->returnValue($cursor));
 
         $this->assertEquals($expectedNumberOfResults, count($this->storage->find($page)));
@@ -84,6 +93,31 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
         $this->storage->save($url);
     }
 
+    public function testGetTotalPages()
+    {
+        $cursor = $this->getMongoCursorMock();
+
+        $cursor->expects($this->once())
+            ->method('count')
+            ->will($this->returnValue(MongoDB::PAGE_LIMIT + 1));
+
+        $this->repository->expects($this->once())
+            ->method('findAll')
+            ->will($this->returnValue($cursor));
+
+        $this->assertEquals(2, $this->storage->getTotalPages());
+    }
+
+    public function testGetDocumentManager()
+    {
+        $this->assertSame($this->dm, $this->storage->getDocumentManager());
+    }
+
+    public function testGetDocumentRepository()
+    {
+        $this->assertSame($this->repository, $this->storage->getDocumentRepository());
+    }
+
     public function getUrls()
     {
         return array(
@@ -92,27 +126,26 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetTotalPages()
+    /**
+     * @return Doctrine\ODM\MongoDB\Mapping\ClassMetadata
+     */
+    protected function getClassMetadataMock()
     {
-        $cursor = $this->getMongoCursorMock();
-        $cursor->expects($this->once())
-            ->method('count')
-            ->will($this->returnValue(MongoDB::PAGE_LIMIT + 1));
-
-        $this->dm->expects($this->once())
-            ->method('find')
-            ->with(MongoDB::URL_CLASS)
-            ->will($this->returnValue($cursor));
-
-        $this->assertEquals(2, $this->storage->getTotalPages());
+        return $this->getMockBuilder('Doctrine\ODM\MongoDB\Mapping\ClassMetadata')
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->getMock();
     }
 
     /**
-     * @return Doctrine\ODM\MongoDB\Cursor
+     * @return Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory
      */
-    protected function getMongoCursorMock()
+    protected function getClassMetadataFactoryMock()
     {
-        return $this->getMock('Doctrine\ODM\MongoDB\Cursor', array('count', 'current', 'next', 'key', 'value', 'rewind', 'skip', 'limit'), array(), '', false, false);
+        return $this->getMockBuilder('Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory')
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->getMock();
     }
 
     /**
@@ -120,41 +153,31 @@ class MongoDBTest extends \PHPUnit_Framework_TestCase
      */
     protected function getDocumentManagerMock()
     {
-        $dm = $this->getMock('Doctrine\ODM\MongoDB\DocumentManager', array('find', 'findOne', 'persist', 'setMetadataFor', 'getMetadataFactory', 'skip', 'limit'), array(), '', false, false);
-        $metadataFactory = new ClassMetadataFactory($dm);
-        $dm->expects($this->any())
-            ->method('getMetadataFactory')
-            ->will($this->returnValue($metadataFactory));
-        return $dm;
+        return $this->getMockBuilder('Doctrine\ODM\MongoDB\DocumentManager')
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->getMock();
     }
 
     /**
-     * @return Doctrine\ODM\MongoDB\Mapping\ClassMetadata
+     * @return Doctrine\ODM\MongoDB\DocumentRepository
      */
-    protected function getClassMetadata()
+    protected function getDocumentRepositoryMock()
     {
-        $metadata = new ClassMetadata(MongoDB::URL_CLASS);
-        $metadata->setAllowCustomId(true);
-        $metadata->setDB('sitemap');
-        $metadata->setCollection('urls');
-        $metadata->mapField(array(
-            'fieldName' => 'loc',
-            'type' => 'custom_id',
-            'id' => true,
-        ));
-        $metadata->mapField(array(
-            'fieldName' => 'lastmod',
-            'type' => 'date',
-        ));
-        $metadata->mapField(array(
-            'fieldName' => 'changefreq',
-            'type' => 'string',
-        ));
-        $metadata->mapField(array(
-            'fieldName' => 'priority',
-            'type' => 'float',
-        ));
-        return $metadata;
+        return $this->getMockBuilder('Doctrine\ODM\MongoDB\DocumentRepository')
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->getMock();
     }
 
+    /**
+     * @return Doctrine\ODM\MongoDB\Cursor
+     */
+    protected function getMongoCursorMock()
+    {
+        return $this->getMockBuilder('Doctrine\ODM\MongoDB\Cursor')
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->getMock();
+    }
 }
