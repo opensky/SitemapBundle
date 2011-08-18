@@ -1,20 +1,18 @@
 <?php
 
-namespace Bundle\SitemapBundle\Controller;
+namespace OpenSky\Bundle\SitemapBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Bundle\SitemapBundle\Sitemap\Sitemap;
+use OpenSky\Bundle\SitemapBundle\Sitemap\Sitemap;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\ParameterBag;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * SitemapController
  *
- * @package OpenSky SitemapBundle
- * @version $Id$
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
  * @copyright (c) 2010 OpenSky Project Inc
- * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
 class SitemapController extends Controller
 {
@@ -24,10 +22,9 @@ class SitemapController extends Controller
      */
     public function siteindexAction()
     {
-
         return $this->generateResponse('siteindex', array(
             'totalPages' => $this->getTotalPages(),
-            'router' => $this->getRouter(),
+            'router'     => $this->getRouter(),
         ));
     }
 
@@ -36,7 +33,6 @@ class SitemapController extends Controller
      */
     public function sitemapAction()
     {
-
         $page = $this->getPage($this->get('request')->query);
         return $this->generateResponse('sitemap', array(
             'urls' => $this->getUrls($page),
@@ -44,22 +40,17 @@ class SitemapController extends Controller
         ));
     }
 
-    protected function generateResponse($template, array $args)
+    protected function generateResponse($view, array $args)
     {
-        $template = $this->getTemplateLoader()->load($template, array(
-                'bundle' => 'SitemapBundle',
-                'controller' => 'Sitemap',
-                'format' => '.xml',
-            ));
+        $template = sprintf(
+            'OpenSkySitemapBundle:Sitemap:%s.xml.%s',
+            $view,
+            $this->container->getParameter('opensky.sitemap.template.engine')
+        );
 
-        extract($args);
-
-        ob_start();
-        require $template;
-
-        return $this->createResponse(ob_get_clean(), 200, array(
-            'Content-Type' => 'application/xml'
-        ));
+        return $this->getTemplating()->renderResponse($template, $args, new Response('', 200, array(
+            'Content-Type' => 'application/xml',
+        )));
     }
 
     /**
@@ -72,19 +63,11 @@ class SitemapController extends Controller
 
     /**
      * @param int $page
-     * @return Traversable<Bundle\SitemapBundle\Sitemap\Url>
+     * @return Traversable<OpenSky\Bundle\SitemapBundle\Sitemap\Url>
      */
     protected function getUrls($page)
     {
         return $this->getSitemap()->getUrls($page);
-    }
-
-    /**
-     * @return Symfony\Component\Templating\Loader\LoaderInterface
-     */
-    protected function getTemplateLoader()
-    {
-        return $this->getTemplating()->getLoader();
     }
 
     /**
@@ -97,11 +80,11 @@ class SitemapController extends Controller
 
     /**
      *
-     * @return Bundle\SitemapBundle\Sitemap\Sitemap
+     * @return OpenSky\Bundle\SitemapBundle\Sitemap\Sitemap
      */
     protected function getSitemap()
     {
-        return $this->get('sitemap');
+        return $this->get('opensky.sitemap');
     }
 
     /**

@@ -1,21 +1,18 @@
 <?php
 
-namespace Bundle\SitemapBundle\Sitemap;
+namespace OpenSky\Bundle\SitemapBundle\Sitemap;
 
-use Bundle\SitemapBundle\Sitemap\Storage\Storage;
+use OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Storage;
 
 /**
  * Sitemap
  *
- * @package OpenSky SitemapBundle
- * @version $Id$
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
  * @copyright (c) 2010 OpenSky Project Inc
- * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
 class Sitemap
 {
-    const DEFAULT_URL_CLASS = 'Bundle\SitemapBundle\Sitemap\Url';
+    const DEFAULT_URL_CLASS = 'OpenSky\Bundle\SitemapBundle\Sitemap\Url';
 
     /**
      * @var string
@@ -26,12 +23,12 @@ class Sitemap
      */
     protected $defaults = array();
     /**
-     * @var Bundle\SitemapBundle\Sitemap\Storage\Storage
+     * @var OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Storage
      */
     protected $storage;
 
     /**
-     * @param Bundle\SitemapBundle\Sitemap\Storage\Storage $storage
+     * @param OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Storage $storage
      * @param array $defaults
      */
     public function __construct(Storage $storage, array $defaults = array())
@@ -54,7 +51,7 @@ class Sitemap
 
     /**
      * @param int $page
-     * @return \Traversable<Bundle\SitemapBundle\Sitemap\Url>
+     * @return \Traversable<OpenSky\Bundle\SitemapBundle\Sitemap\Url>
      */
     public function getUrls($page = 1)
     {
@@ -64,13 +61,13 @@ class Sitemap
     /**
      * @param string $loc
      * @param array $info
-     * @return Bundle\SitemapBundle\Sitemap\Url
+     * @return OpenSky\Bundle\SitemapBundle\Sitemap\Url
      */
     public function add($loc, array $info)
     {
-        $info = array_merge($this->defaults, $info);
+        $info     = array_merge($this->defaults, $info);
         $urlClass = $this->getUrlClass();
-        $url = new $urlClass($loc);
+        $url      = new $urlClass($loc);
         foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
             if (isset($info[$prop])) {
                 $url->{'set' . ucfirst($prop)}($info[$prop]);
@@ -82,7 +79,7 @@ class Sitemap
 
     /**
      * @param string $loc
-     * @return Bundle\SitemapBundle\Sitemap\Url|null
+     * @return OpenSky\Bundle\SitemapBundle\Sitemap\Url|null
      */
     public function get($loc)
     {
@@ -118,7 +115,7 @@ class Sitemap
     }
 
     /**
-     * @return Bundle\SitemapBundle\Sitemap\Storage\Storage
+     * @return OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Storage
      */
     public function getStorage()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bundle\SitemapBundle\Command;
+namespace OpenSky\Bundle\SitemapBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputOption;
@@ -11,11 +11,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * GenerateCommand
  *
- * @package OpenSky SitemapBundle
- * @version $Id$
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
  * @copyright (c) 2010 OpenSky Project Inc
- * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
 class GenerateCommand extends BaseCommand
 {
@@ -36,7 +33,7 @@ class GenerateCommand extends BaseCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $sitemap = $this->getSitemap();
-        foreach ($this->container->findTaggedServiceIds('sitemap.provider') as $id => $attributes) {
+        foreach ($this->getProviders() as $id) {
             $this->container->get($id)->populate($sitemap);
         }
         $this->getSitemapDumper()->dump($sitemap);
@@ -47,16 +44,22 @@ class GenerateCommand extends BaseCommand
      */
     protected function getSitemap()
     {
-        return $this->container->get('sitemap');
+        return $this->container->get('opensky.sitemap');
     }
 
     /**
-     *
      * @return Bundle\SitemapBundle\Dumper\Dumper
      */
     protected function getSitemapDumper()
     {
-        return $this->container->get('sitemap.dumper');
+        return $this->container->get('opensky.sitemap.dumper');
     }
 
+    /**
+     * @return array Provider service ids
+     */
+    protected function getProviders()
+    {
+        return $this->container->getParameter('opensky.sitemap.providers');
+    }
 }

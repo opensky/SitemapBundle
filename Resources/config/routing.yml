@@ -1,8 +1,8 @@
 sitemap:
   pattern: /sitemap.xml
-  defaults:     { _controller: SitemapBundle:Sitemap:sitemap, _format: xml }
+  defaults:     { _controller: OpenSkySitemapBundle:Sitemap:sitemap, _format: xml }
   requirements: { _method: GET }
 siteindex:
   pattern: /siteindex.xml
-  defaults:     { _controller: SitemapBundle:Sitemap:siteindex, _format: xml }
+  defaults:     { _controller: OpenSkySitemapBundle:Sitemap:siteindex, _format: xml }
   requirements: { _method: GET }

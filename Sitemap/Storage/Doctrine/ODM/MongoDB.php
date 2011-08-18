@@ -1,9 +1,9 @@
 <?php
 
-namespace Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM;
+namespace OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM;
 
-use Bundle\SitemapBundle\Sitemap\Url;
-use Bundle\SitemapBundle\Sitemap\Storage\Storage;
+use OpenSky\Bundle\SitemapBundle\Sitemap\Url;
+use OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Storage;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
@@ -12,15 +12,12 @@ use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
 /**
  * MongoDB
  *
- * @package OpenSky SitemapBundle
- * @version $Id$
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
  * @copyright (c) 2010 OpenSky Project Inc
- * @license http://www.gnu.org/licenses/agpl.txt GNU Affero General Public License
  */
 class MongoDB implements Storage
 {
-    const URL_CLASS = 'Bundle\SitemapBundle\Sitemap\Url';
+    const URL_CLASS = 'OpenSky\Bundle\SitemapBundle\Sitemap\Url';
 
     /**
      * @var Doctrine\ODM\MongoDB\DocumentManager
@@ -67,7 +64,7 @@ class MongoDB implements Storage
      * Finds one Url by location, returns null if not found
      *
      * @param string $loc
-     * @return Bundle\SitemapBundle\Sitemap\Url|null
+     * @return OpenSky\Bundle\SitemapBundle\Sitemap\Url|null
      */
     public function findOne($loc)
     {
@@ -78,7 +75,7 @@ class MongoDB implements Storage
      * Finds all urls on specific page
      *
      * @param int $page
-     * @return \Traversable<Bundle\SitemapBundle\Sitemap\Url>
+     * @return \Traversable<OpenSky\Bundle\SitemapBundle\Sitemap\Url>
      */
     public function find($page)
     {
@@ -100,7 +97,7 @@ class MongoDB implements Storage
     /**
      * Persists Url in DocumentManager, does not call flush
      *
-     * @param \Bundle\SitemapBundle\Sitemap\Url $url
+     * @param OpenSky\Bundle\SitemapBundle\Sitemap\Url $url
      */
     public function save(Url $url)
     {
