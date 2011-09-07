@@ -25,7 +25,6 @@ class OpenSkySitemapExtension extends Extension
      *         default_lastmod:    2010-06-01
      *         default_changefreq: monthly
      *         default_priority:   0.5
-     *         driver:             odm.mongodb
      *
      * @see Symfony\Component\DependencyInjection\Extension\ExtensionInterface::load()
      */
@@ -36,12 +35,6 @@ class OpenSkySitemapExtension extends Extension
 
         $defaults = $container->getParameter('opensky.sitemap.defaults');
         foreach (Processor::normalizeKeys($configs) as $config) {
-            if (isset($config['driver'])) {
-                foreach (array('opensky.sitemap.dumper', 'opensky.sitemap.sitemap.storage') as $service) {
-                    $container->setAlias($service, $service . '.' . $config['driver']);
-                }
-            }
-
             foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
                 if (isset($config['default_' . $prop])) {
                     $defaults[$prop] = $config['default_' . $prop];

@@ -1,32 +1,36 @@
-# Adding bundle to Kernel
+# OpenSky SitemapBundle
 
 This bundle will help with sitemap generation in your Symfony2 based projects.
-To enable the sitemap bundle, add it to you kernel registerBundles() method:
+
+
+## Adding the bundle to your kernel
+
+To enable the sitemap bundle, add it to your kernel registerBundles() method:
 
     use Symfony\Foundation\Kernel;
 
     class MyKernel extends Kernel {
-        ...
+        // ...
         public function registerBundles() {
             return array(
-                ...
+                // ...
                 new OpenSky\Bundle\SitemapBundle\SitemapBundle(),
-                ...
+                // ...
             );
         }
     }
 
-# Enabling the services
 
-The second step is to enable its DependencyInjection extension in your config.yml:
+## Enabling the services
+
+The second step is to enable its DependencyInjection extension in your `config.yml`:
 
     opensky_sitemap:
       default_lastmod:    2010-06-01
       default_changefreq: monthly
       default_priority:   0.5
-      driver:             odm.mongodb
 
-In the example above, we enabled the sitemap with `odm.mongodb` driver, which means that you have to add `DoctrineMongoDBBundle` to your Kernel and register its configuration like so:
+You will need a Doctrine ODM MongoDB connection for your sitemap. This means that you have to add `DoctrineMongoDBBundle` to your Kernel and register its configuration like so:
 
     doctrine_odm.mongodb:
       auto_generate_proxy_classes: true
@@ -43,7 +47,41 @@ In the example above, we enabled the sitemap with `odm.mongodb` driver, which me
         mongodb:
           server: localhost:27017
 
-# Writing custom url providers for *sitemap:generate* command
+
+## Defining a Url class
+
+You will need to add a URL document to your model. Most likely, you will want to save a class that looks like this to your `Document` directory:
+
+    <?php
+
+    namespace My\MainBundle\Document;
+
+    use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+    use OpenSky\Bundle\SitemapBundle\Sitemap\Url as BaseUrl;
+
+    /** @ODM\Document(db="sitemap",collection="urls") */
+    class Url extends BaseUrl
+    {
+        /** @ODM\Id(strategy="NONE") */
+        protected $loc;
+
+        /** @ODM\String */
+        protected $lastmod;
+
+        /** @ODM\String */
+        protected $changefreq;
+
+        /** @ODM\Float */
+        protected $priority;
+    }
+
+Then add this class to your application's config:
+
+    parameters:
+      opensky.sitemap.url.class: My\MainBundle\Document\Url
+
+
+## Writing custom url providers for `sitemap:generate` command
 
 The third step is to write your url providers to populate the 'sitemap' with
 existing urls, e.g:
@@ -101,7 +139,8 @@ or simply:
 
     > php forum/console sitemap:g
 
-# Creating/Updating sitemap urls in the application
+
+## Creating/Updating sitemap urls in the application
 
 After the three steps were completed, you can use Symfony2's native 'event_dispatcher'
 service to let the 'sitemap' know of new url:
@@ -119,7 +158,8 @@ or existing url updates:
         'priority'   => '0.6',
     )));
 
-# Enabling sitemap routes
+
+## Enabling sitemap routes
 
 The last and most important step is to enable sitemap routing in your routing.yml:
 

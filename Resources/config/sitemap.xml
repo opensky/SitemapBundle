@@ -6,74 +6,34 @@
     <parameters>
         <parameter key="opensky.sitemap.request.parser.class">OpenSky\Bundle\SitemapBundle\Listener\RequestParser</parameter>
         <parameter key="opensky.sitemap.response.filter.class">OpenSky\Bundle\SitemapBundle\Listener\ResponseFilter</parameter>
-        <parameter key="opensky.sitemap.url.class">OpenSky\Bundle\SitemapBundle\Sitemap\Url</parameter>
+        <parameter key="opensky.sitemap.url.class">OpenSky\Bundle\SitemapBundle\Document\Url</parameter>
         <parameter key="opensky.sitemap_exporter.class">OpenSky\Bundle\SitemapBundle\Sitemap\SitemapExporter</parameter>
-        <parameter key="opensky.sitemap.dumper.odm.mongodb.class">OpenSky\Bundle\SitemapBundle\Dumper\Doctrine\ODM\MongoDB</parameter>
-        <parameter key="opensky.sitemap.sitemap.storage.odm.mongodb.class">OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB</parameter>
-        <parameter key="opensky.sitemap.sitemap.storage.odm.mongodb.collection">%kernel.name%_urls</parameter>
-        <parameter key="opensky.sitemap.sitemap.storage.odm.mongodb.db">sitemap</parameter>
+        <parameter key="opensky.sitemap.dumper.class">OpenSky\Bundle\SitemapBundle\Dumper\Doctrine\ODM\MongoDB</parameter>
+        <parameter key="opensky.sitemap.sitemap.storage.class">OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB</parameter>
         <parameter key="opensky.sitemap.class">OpenSky\Bundle\SitemapBundle\Sitemap\Sitemap</parameter>
-        <parameter key="opensky.sitemap.defaults" type="collection" />
         <parameter key="opensky.sitemap.listener.class">OpenSky\Bundle\SitemapBundle\Listener\SitemapListener</parameter>
-        <parameter key="opensky.sitemap.providers" type="collection" />
         <parameter key="opensky.sitemap.template.engine">twig</parameter>
+        <parameter key="opensky.sitemap.defaults" type="collection" />
+        <parameter key="opensky.sitemap.providers" type="collection" />
     </parameters>
 
     <services>
         <service alias="opensky.sitemap.sitemap" id="opensky.sitemap" />
         <service id="opensky.sitemap.sitemap" class="%opensky.sitemap.class%">
-            <argument type="service" id="opensky.sitemap.sitemap.storage.odm.mongodb" />
+            <argument type="service" id="opensky.sitemap.sitemap.storage" />
             <argument>%opensky.sitemap.defaults%</argument>
             <call method="setUrlClass">
                 <argument>%opensky.sitemap.url.class%</argument>
             </call>
         </service>
-        <service id="opensky.sitemap.dumper.odm.mongodb" class="%opensky.sitemap.dumper.odm.mongodb.class%" />
-        <service id="opensky.sitemap.sitemap.storage.odm.mongodb" class="%opensky.sitemap.sitemap.storage.odm.mongodb.class%">
+        <service id="opensky.sitemap.dumper" class="%opensky.sitemap.dumper.class%" />
+        <service id="opensky.sitemap.sitemap.storage" class="%opensky.sitemap.sitemap.storage.class%">
             <argument type="service" id="doctrine.odm.mongodb.document_manager" />
-            <call method="register">
-                <argument type="service" id="opensky.sitemap.class_metadata" />
-                <argument type="service">
-                    <service factory-service="doctrine.odm.mongodb.document_manager" factory-method="getMetadataFactory" class="Doctrine\ODM\MongoDB\Mapping\ClassMetadata" />
-                </argument>
-            </call>
-            <call method="setRepository">
-                <argument type="service">
-                    <service factory-service="doctrine.odm.mongodb.document_manager" factory-method="getRepository" class="Doctrine\ODM\MongoDB\DocumentRepository">
-                        <argument type="constant">OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB::URL_CLASS</argument>
-                    </service>
-                </argument>
-            </call>
-        </service>
-        <service id="opensky.sitemap.class_metadata" class="Doctrine\ODM\MongoDB\Mapping\ClassMetadata">
-            <argument type="constant">OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Doctrine\ODM\MongoDB::URL_CLASS</argument>
-            <call method="setDatabase"><argument>%opensky.sitemap.sitemap.storage.odm.mongodb.db%</argument></call>
-            <call method="setCollection"><argument>%opensky.sitemap.sitemap.storage.odm.mongodb.collection%</argument></call>
-            <call method="mapField">
-                <argument type="collection">
-                    <argument key="fieldName">loc</argument>
-                    <argument key="id">true</argument>
-                    <argument key="strategy">none</argument>
-                </argument>
-            </call>
-            <call method="mapField">
-                <argument type="collection">
-                    <argument key="fieldName">lastmod</argument>
-                    <argument key="type">date</argument>
-                </argument>
-            </call>
-            <call method="mapField">
-                <argument type="collection">
-                    <argument key="fieldName">changefreq</argument>
-                    <argument key="type">string</argument>
-                </argument>
-            </call>
-            <call method="mapField">
-                <argument type="collection">
-                    <argument key="fieldName">priority</argument>
-                    <argument key="type">float</argument>
-                </argument>
-            </call>
+            <argument type="service">
+                <service factory-service="doctrine.odm.mongodb.document_manager" factory-method="getRepository" class="Doctrine\ODM\MongoDB\DocumentRepository">
+                    <argument>%opensky.sitemap.url.class%</argument>
+                </service>
+            </argument>
         </service>
         <service id="opensky.sitemap.listener" class="%opensky.sitemap.listener.class%">
             <tag name="kernel.listener" event="opensky.sitemap.update" method="update" />

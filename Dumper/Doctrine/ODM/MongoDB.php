@@ -22,6 +22,7 @@ class MongoDB implements Dumper
         // remove the old ones first...
         $this->getDocumentCollection($sitemap)->remove(array());
 
+        // now flush the new ones
         $dm = $this->getDocumentManager($sitemap);
         $dm->flush(array('safe' => true));
     }
@@ -41,7 +42,7 @@ class MongoDB implements Dumper
      */
     protected function getDocumentCollection(Sitemap $sitemap)
     {
-        $storage = $sitemap->getStorage();
-        return $this->getDocumentManager($sitemap)->getDocumentCollection($storage::URL_CLASS);
+        return $this->getDocumentManager($sitemap)->getDocumentCollection($sitemap->getUrlClass());
     }
+
 }

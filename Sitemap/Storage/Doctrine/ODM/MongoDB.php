@@ -17,8 +17,6 @@ use Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory;
  */
 class MongoDB implements Storage
 {
-    const URL_CLASS = 'OpenSky\Bundle\SitemapBundle\Sitemap\Url';
-
     /**
      * @var Doctrine\ODM\MongoDB\DocumentManager
      */
@@ -34,29 +32,9 @@ class MongoDB implements Storage
      *
      * @param Doctrine\ODM\MongoDB\DocumentManager $dm
      */
-    public function __construct(DocumentManager $dm)
+    public function __construct(DocumentManager $dm, DocumentRepository $repository)
     {
         $this->dm = $dm;
-    }
-
-    /**
-     * Registers ClassMetadata with a ClassMetadataFactory.
-     *
-     * @param Doctrine\ODM\MongoDB\Mapping\ClassMetadata        $cm;
-     * @param Doctrine\ODM\MongoDB\Mapping\ClassMetadataFactory $cmf;
-     */
-    public function register(ClassMetadata $cm, ClassMetadataFactory $cmf)
-    {
-        $cmf->setMetadataFor(self::URL_CLASS, $cm);
-    }
-
-    /**
-     * Sets the DocumentRepository.
-     *
-     * @param Doctrine\ODM\MongoDB\DocumentRepository $repository
-     */
-    public function setRepository(DocumentRepository $repository)
-    {
         $this->repository = $repository;
     }
 
@@ -124,5 +102,4 @@ class MongoDB implements Storage
     {
         return ((int) $page - 1) * self::PAGE_LIMIT;
     }
-
 }
