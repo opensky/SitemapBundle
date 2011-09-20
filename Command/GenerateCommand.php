@@ -2,7 +2,7 @@
 
 namespace OpenSky\Bundle\SitemapBundle\Command;
 
-use Symfony\Component\Console\Command\Command as BaseCommand;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author Bulat Shakirzyanov <bulat@theopenskyproject.com>
  * @copyright (c) 2010 OpenSky Project Inc
  */
-class GenerateCommand extends BaseCommand
+class GenerateCommand extends ContainerAwareCommand
 {
 
     /**
@@ -34,7 +34,7 @@ class GenerateCommand extends BaseCommand
     {
         $sitemap = $this->getSitemap();
         foreach ($this->getProviders() as $id) {
-            $this->container->get($id)->populate($sitemap);
+            $this->getContainer()->get($id)->populate($sitemap);
         }
         $this->getSitemapDumper()->dump($sitemap);
     }
@@ -44,7 +44,7 @@ class GenerateCommand extends BaseCommand
      */
     protected function getSitemap()
     {
-        return $this->container->get('opensky.sitemap');
+        return $this->getContainer()->get('opensky.sitemap');
     }
 
     /**
@@ -52,7 +52,7 @@ class GenerateCommand extends BaseCommand
      */
     protected function getSitemapDumper()
     {
-        return $this->container->get('opensky.sitemap.dumper');
+        return $this->getContainer()->get('opensky.sitemap.dumper');
     }
 
     /**
@@ -60,6 +60,6 @@ class GenerateCommand extends BaseCommand
      */
     protected function getProviders()
     {
-        return $this->container->getParameter('opensky.sitemap.providers');
+        return $this->getContainer()->getParameter('opensky.sitemap.providers');
     }
 }
