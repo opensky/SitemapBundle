@@ -24,7 +24,7 @@ class MongoDB implements Dumper
 
         // now flush the new ones
         $dm = $this->getDocumentManager($sitemap);
-        $dm->flush(array('safe' => true));
+        $dm->flush(null, array('safe' => true));
     }
 
     /**
