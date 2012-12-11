@@ -49,7 +49,7 @@ class Url
     /**
      * @var string
      */
-    protected $image;
+    protected $imageloc;
     /**
      * @var string
      */
@@ -134,4 +134,36 @@ class Url
         return number_format($this->priority, 1);
     }
 
+    /**
+     * @return string
+     */
+    public function getImageloc()
+    {
+        return $this->imageloc;
+    }
+
+    /**
+     * @param string $imageloc
+     */
+    public function setImageloc($imageloc)
+    {
+        $this->imageloc = $imageloc;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImagetitle()
+    {
+        return $this->imagetitle;
+    }
+
+    /**
+     * @param string $imagetitle
+     */
+    public function getImagetitle($imagetitle)
+    {
+        $this->imagetitle = $imagetitle;
+    }    
 }
+
