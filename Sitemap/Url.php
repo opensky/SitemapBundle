@@ -46,7 +46,14 @@ class Url
      * @var float
      */
     protected $priority;
-
+    /**
+     * @var string
+     */
+    protected $image;
+    /**
+     * @var string
+     */
+    protected $imagetitle;
     /**
      * @param string $loc
      * @throws \InvalidArgumentException
