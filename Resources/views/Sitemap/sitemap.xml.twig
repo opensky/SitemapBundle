@@ -8,9 +8,9 @@
                 {% if url.lastmod %}<lastmod>{{ url.lastmod }}</lastmod>{% endif %}
                 {% if url.changefreq %}<changefreq>{{ url.changefreq }}</changefreq>{% endif %}
                 {% if url.priority %}<priority>{{ url.priority }}</priority>{% endif %}
-                {% if url.image %}
+                {% if url.imageloc %}
                     <image:image>
-                        <image:loc>{{ url.image }}</image:loc>
+                        <image:loc>{{ asset(url.imageloc, 'versioned') }}</image:loc>
                         {% if url.imagetitle %}<image:title>{{ url.imagetitle }}</image:title>{% endif %}
                     </image:image>
                 {% endif %}

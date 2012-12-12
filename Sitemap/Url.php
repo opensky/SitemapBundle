@@ -161,7 +161,7 @@ class Url
     /**
      * @param string $imagetitle
      */
-    public function getImagetitle($imagetitle)
+    public function setImagetitle($imagetitle)
     {
         $this->imagetitle = $imagetitle;
     }    

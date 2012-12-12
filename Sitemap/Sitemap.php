@@ -34,7 +34,7 @@ class Sitemap
     public function __construct(Storage $storage, array $defaults = array())
     {
         $this->storage = $storage;
-        foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
+        foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle') as $prop) {
             if (isset($defaults[$prop])) {
                 $this->defaults[$prop] = $defaults[$prop];
             }
