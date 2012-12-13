@@ -57,11 +57,21 @@ class SitemapListener
 
     public function create(Event $event)
     {
-        $this->sitemap->add($event->get('loc'), array(
+        $values = array(
             'changefreq' => ($event->has('changefreq') ? $event->get('changefreq') : Url::YEARLY),
             'priority' => ($event->has('priority') ? $event->get('priority') : self::DEFAULT_PRIORITY),
-            'lastmod' => new \DateTime(),
-        ));
+            'lastmod' => new \DateTime()
+        );
+        if ($event->has('expires')) {
+            $values['expires'] = $event->get('expires');
+        }
+        if ($event->has('imageloc')) {
+            $values['imageloc'] = $event->get('imageloc');
+            if ($event->has('imagetitle')) {
+                $values['imagetitle'] = $event->get('imagetitle');
+            }
+        }
+        $this->sitemap->add($event->get('loc'), $values);
 
         $this->dump($this->sitemap);
     }
