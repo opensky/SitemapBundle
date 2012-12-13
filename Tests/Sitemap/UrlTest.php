@@ -61,6 +61,28 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1.0, $url->getPriority());
     }
 
+    public function testGetExpires()
+    {
+        $url = new Url('http://www.example.org/');
+        $now = new \DateTime();
+        $url->setExpires($now);
+        $this->assertEquals(date(URL::EXPIRES_FORMAT, $now->getTimestamp(), $url->getExpires()));
+    }
+
+    public function testGetImageloc()
+    {
+        $url = new Url('http://www.example.org/');
+        $url->setImageloc('http://www.example.org/image.jpg');
+        $this->assertEquals('http://www.example.org/image.jpg', $url->getImageloc());
+    }
+
+    public function testGetImageloc()
+    {
+        $url = new Url('http://www.example.org/');
+        $url->setImagetitle('Image Title');
+        $this->assertEquals('Image Title', $url->getImagetitle());
+    }
+
     /**
      * @expectedException Bundle\SitemapBundle\Exception\InvalidArgumentException
      */

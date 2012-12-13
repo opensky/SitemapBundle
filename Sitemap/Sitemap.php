@@ -34,7 +34,7 @@ class Sitemap
     public function __construct(Storage $storage, array $defaults = array())
     {
         $this->storage = $storage;
-        foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle') as $prop) {
+        foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle', 'expires') as $prop) {
             if (isset($defaults[$prop])) {
                 $this->defaults[$prop] = $defaults[$prop];
             }
@@ -68,7 +68,7 @@ class Sitemap
         $info     = array_merge($this->defaults, $info);
         $urlClass = $this->getUrlClass();
         $url      = new $urlClass($loc);
-        foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle') as $prop) {
+        foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle', 'expires') as $prop) {
             if (isset($info[$prop])) {
                 $url->{'set' . ucfirst($prop)}($info[$prop]);
             }

@@ -14,6 +14,7 @@
                         {% if url.imagetitle %}<image:title>{{ url.imagetitle }}</image:title>{% endif %}
                     </image:image>
                 {% endif %}
+                {% if url.expires %}<expires>{{ url.expires }}</expires>{% endif %}
             </url>
         {% endfor %}
     </urlset>
