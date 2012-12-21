@@ -52,6 +52,17 @@ class SitemapListener
         $url->setLastmod($time);
         $url->setChangefreq($this->getChangefreq($time->diff(\DateTime::createFromFormat(Url::LASTMOD_FORMAT, $lastmod))));
 
+        if ($event->has('imageloc')) {
+            $url->setImageloc($event->get('imageloc'));
+            if ($event->has('imagetitle')) {
+                $url->setImagetitle($event->get('imagetitle'));
+            }
+        }
+
+        if ($event->has('expires')) {
+            $url->setExpires($event->get('expires'));
+        }
+
         $this->dump($this->sitemap);
     }
 
