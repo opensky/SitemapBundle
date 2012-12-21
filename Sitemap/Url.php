@@ -178,7 +178,7 @@ class Url
     public function getExpires()
     {
         if ($this->expires instanceof \DateTime) {
-            $this->expires = $this->expires->format(self::LASTMOD_FORMAT);
+            $this->expires = $this->expires->format(self::EXPIRES_FORMAT);
         }
         return $this->expires;
     }
