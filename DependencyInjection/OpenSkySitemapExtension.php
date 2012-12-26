@@ -35,7 +35,7 @@ class OpenSkySitemapExtension extends Extension
 
         $defaults = $container->getParameter('opensky.sitemap.defaults');
         foreach (Processor::normalizeKeys($configs) as $config) {
-            foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle', 'expires') as $prop) {
+            foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle') as $prop) {
                 if (isset($config['default_' . $prop])) {
                     $defaults[$prop] = $config['default_' . $prop];
                 }

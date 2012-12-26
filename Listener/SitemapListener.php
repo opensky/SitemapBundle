@@ -59,10 +59,6 @@ class SitemapListener
             }
         }
 
-        if ($event->has('expires')) {
-            $url->setExpires($event->get('expires'));
-        }
-
         $this->dump($this->sitemap);
     }
 
@@ -73,9 +69,6 @@ class SitemapListener
             'priority' => ($event->has('priority') ? $event->get('priority') : self::DEFAULT_PRIORITY),
             'lastmod' => new \DateTime()
         );
-        if ($event->has('expires')) {
-            $values['expires'] = $event->get('expires');
-        }
         if ($event->has('imageloc')) {
             $values['imageloc'] = $event->get('imageloc');
             if ($event->has('imagetitle')) {

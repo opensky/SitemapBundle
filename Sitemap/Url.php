@@ -27,7 +27,6 @@ class Url
     const MONTHLY = 'monthly';
     const YEARLY = 'yearly';
     const LASTMOD_FORMAT = 'Y-m-d';
-    const EXPIRES_FORMAT = 'Y-m-d';
 
     /**
      * @var string
@@ -55,10 +54,6 @@ class Url
      * @var string
      */
     protected $imagetitle;
-    /**
-     * @var string
-     */
-    protected $expires;
 
     /**
      * @param string $loc
@@ -171,27 +166,5 @@ class Url
     {
         $this->imagetitle = $imagetitle;
     }    
-
-    /**
-     * @return string
-     */
-    public function getExpires()
-    {
-        if ($this->expires instanceof \DateTime) {
-            $this->expires = $this->expires->format(self::EXPIRES_FORMAT);
-        }
-        return $this->expires;
-    }
-
-    /**
-     * @param string $expires
-     */
-    public function setExpires($expires)
-    {
-        if ($expires instanceof \DateTime) {
-            $expires = $expires->getTimestamp();
-        }
-        $this->expires = date(self::EXPIRES_FORMAT, $expires);
-    }
 }
 

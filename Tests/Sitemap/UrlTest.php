@@ -61,14 +61,6 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1.0, $url->getPriority());
     }
 
-    public function testGetExpires()
-    {
-        $url = new Url('http://www.example.org/');
-        $now = new \DateTime();
-        $url->setExpires($now);
-        $this->assertEquals(date(URL::EXPIRES_FORMAT, $now->getTimestamp(), $url->getExpires()));
-    }
-
     public function testGetImageloc()
     {
         $url = new Url('http://www.example.org/');
