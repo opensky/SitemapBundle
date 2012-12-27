@@ -52,16 +52,27 @@ class SitemapListener
         $url->setLastmod($time);
         $url->setChangefreq($this->getChangefreq($time->diff(\DateTime::createFromFormat(Url::LASTMOD_FORMAT, $lastmod))));
 
+        if ($event->has('imageloc')) {
+            $url->setImageloc($event->get('imageloc'));
+            if ($event->has('imagetitle')) {
+                $url->setImagetitle($event->get('imagetitle'));
+            }
+        }
+
         $this->dump($this->sitemap);
     }
 
     public function create(Event $event)
     {
-        $this->sitemap->add($event->get('loc'), array(
+        $values = array(
             'changefreq' => ($event->has('changefreq') ? $event->get('changefreq') : Url::YEARLY),
             'priority' => ($event->has('priority') ? $event->get('priority') : self::DEFAULT_PRIORITY),
             'lastmod' => new \DateTime(),
-        ));
+            'imageloc' => ($event->has('imageloc') ? $event->get('imageloc') : null),
+            'imagetitle' => ($event->has('imagetitle') ? $event->get('imagetitle') : null),
+        );
+
+        $this->sitemap->add($event->get('loc'), $values);
 
         $this->dump($this->sitemap);
     }

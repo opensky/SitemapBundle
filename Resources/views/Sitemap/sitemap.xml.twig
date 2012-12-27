@@ -1,12 +1,19 @@
 {% spaceless %}
     <?xml version="1.0" encoding="UTF-8"?>
-    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+            xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
         {% for url in urls %}
             <url>
                 {% if url.loc %}<loc>{{ url.loc }}</loc>{% endif %}
                 {% if url.lastmod %}<lastmod>{{ url.lastmod }}</lastmod>{% endif %}
                 {% if url.changefreq %}<changefreq>{{ url.changefreq }}</changefreq>{% endif %}
                 {% if url.priority %}<priority>{{ url.priority }}</priority>{% endif %}
+                {% if url.imageloc %}
+                    <image:image>
+                        <image:loc>{{ asset(url.imageloc, 'versioned') }}</image:loc>
+                        {% if url.imagetitle %}<image:title>{{ url.imagetitle }}</image:title>{% endif %}
+                    </image:image>
+                {% endif %}
             </url>
         {% endfor %}
     </urlset>

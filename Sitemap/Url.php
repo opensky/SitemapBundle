@@ -46,6 +46,14 @@ class Url
      * @var float
      */
     protected $priority;
+    /**
+     * @var string
+     */
+    protected $imageloc;
+    /**
+     * @var string
+     */
+    protected $imagetitle;
 
     /**
      * @param string $loc
@@ -127,4 +135,36 @@ class Url
         return number_format($this->priority, 1);
     }
 
+    /**
+     * @return string
+     */
+    public function getImageloc()
+    {
+        return $this->imageloc;
+    }
+
+    /**
+     * @param string $imageloc
+     */
+    public function setImageloc($imageloc)
+    {
+        $this->imageloc = $imageloc;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImagetitle()
+    {
+        return $this->imagetitle;
+    }
+
+    /**
+     * @param string $imagetitle
+     */
+    public function setImagetitle($imagetitle)
+    {
+        $this->imagetitle = $imagetitle;
+    }    
 }
+
