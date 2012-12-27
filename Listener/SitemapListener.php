@@ -59,6 +59,10 @@ class SitemapListener
             }
         }
 
+        if ($event->has('expires')) {
+            $url->setExpires($event->get('expires'));
+        }
+
         $this->dump($this->sitemap);
     }
 
@@ -70,6 +74,7 @@ class SitemapListener
             'lastmod' => new \DateTime(),
             'imageloc' => ($event->has('imageloc') ? $event->get('imageloc') : null),
             'imagetitle' => ($event->has('imagetitle') ? $event->get('imagetitle') : null),
+            'expires' => ($event->has('expires') ? $event->get('expires') : null),
         );
 
         $this->sitemap->add($event->get('loc'), $values);

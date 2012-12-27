@@ -68,7 +68,7 @@ class Sitemap
         $info     = array_merge($this->defaults, $info);
         $urlClass = $this->getUrlClass();
         $url      = new $urlClass($loc);
-        foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle') as $prop) {
+        foreach (array('changefreq', 'priority', 'lastmod', 'imageloc', 'imagetitle', 'expires') as $prop) {
             if (isset($info[$prop])) {
                 $url->{'set' . ucfirst($prop)}($info[$prop]);
             }
