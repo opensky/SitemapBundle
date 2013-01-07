@@ -2,6 +2,19 @@
 
 This bundle will help with sitemap generation in your Symfony2 based projects.
 
+## Installation via Composer
+
+Add the following to the "repositories" section of composer.json:
+```
+{
+    "type": "vcs",
+    "url": "https://github.com/opensky/SitemapBundle"
+}
+```
+
+Add the following to the "require" section of composer.json:
+
+    "opensky/sitemap-bundle": "dev-master"
 
 ## Adding the bundle to your kernel
 
@@ -14,7 +27,7 @@ To enable the sitemap bundle, add it to your kernel registerBundles() method:
         public function registerBundles() {
             return array(
                 // ...
-                new OpenSky\Bundle\SitemapBundle\SitemapBundle(),
+                new OpenSky\Bundle\SitemapBundle\OpenSkySitemapBundle(),
                 // ...
             );
         }
