@@ -27,6 +27,7 @@ class Url
     const MONTHLY = 'monthly';
     const YEARLY = 'yearly';
     const LASTMOD_FORMAT = 'Y-m-d';
+    const EXPIRES_FORMAT = 'Y-m-d';
 
     /**
      * @var string
@@ -46,6 +47,23 @@ class Url
      * @var float
      */
     protected $priority;
+    /**
+     * @var string
+     */
+    protected $imageloc;
+    /**
+     * @var string
+     */
+    protected $imagetitle;
+    /**
+     * @var string
+     */
+    protected $expires;
+
+    /**
+     * @var string
+     */
+    protected $expires;
 
     /**
      * @param string $loc
@@ -127,4 +145,57 @@ class Url
         return number_format($this->priority, 1);
     }
 
+    /**
+     * @return string
+     */
+    public function getImageloc()
+    {
+        return $this->imageloc;
+    }
+
+    /**
+     * @param string $imageloc
+     */
+    public function setImageloc($imageloc)
+    {
+        $this->imageloc = $imageloc;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImagetitle()
+    {
+        return $this->imagetitle;
+    }
+
+    /**
+     * @param string $imagetitle
+     */
+    public function setImagetitle($imagetitle)
+    {
+        $this->imagetitle = $imagetitle;
+    }   
+    /**
+     * @param string|\DateTime $expires
+     */
+    public function setExpires($expires)
+    {
+        if ($expires instanceof \DateTime) {
+            $expires = $expires->getTimestamp();
+        }
+        $this->expires = date(self::EXPIRES_FORMAT, $expires);
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpires()
+    {
+        if ($this->expires instanceof \DateTime) {
+            $this->expires = $this->expires->format(self::EXPIRES_FORMAT);
+        }
+        return $this->expires;
+    } 
 }
+
