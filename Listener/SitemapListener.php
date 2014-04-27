@@ -50,7 +50,7 @@ class SitemapListener
         $lastmod = $url->getLastmod();
 
         $url->setLastmod($time);
-        $url->setChangefreq($this->getChangefreq($time->diff(\DateTime::createFromFormat(Url::LASTMOD_FORMAT, $lastmod))));
+        $url->setChangefreq($this->getChangefreq($time->diff(\DateTime::createFromFormat(Url::LASTMOD_FORMAT, $lastmod->format(Url::LASTMOD_FORMAT)))));
 
         $this->dump($this->sitemap);
     }
@@ -62,6 +62,21 @@ class SitemapListener
             'priority' => ($event->has('priority') ? $event->get('priority') : self::DEFAULT_PRIORITY),
             'lastmod' => new \DateTime(),
         ));
+
+        $this->dump($this->sitemap);
+    }
+
+    public function delete(Event $event)
+    {
+        $urlLoc = $event->get('loc');
+
+        if (!$this->sitemap->has($urlLoc)) {
+            throw new Exception\OutOfBoundsException('Url ' . $urlLoc . ' could not be found.');
+        }
+
+        $url = $this->sitemap->get($urlLoc);
+
+        $this->sitemap->delete($url);
 
         $this->dump($this->sitemap);
     }

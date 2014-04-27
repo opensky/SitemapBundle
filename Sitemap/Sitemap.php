@@ -82,6 +82,11 @@ class Sitemap
         return $url;
     }
 
+    public function delete($url)
+    {
+        $this->storage->remove($url);
+    }
+
     /**
      * @param string $loc
      * @return OpenSky\Bundle\SitemapBundle\Sitemap\Url|null

@@ -38,8 +38,9 @@
             </argument>
         </service>
         <service id="opensky.sitemap.listener" class="%opensky.sitemap.listener.class%">
-            <tag name="kernel.listener" event="opensky.sitemap.update" method="update" />
-            <tag name="kernel.listener" event="opensky.sitemap.create" method="create" />
+            <tag name="kernel.event_listener" event="opensky.sitemap.update" method="update" />
+            <tag name="kernel.event_listener" event="opensky.sitemap.create" method="create" />
+            <tag name="kernel.event_listener" event="opensky.sitemap.delete" method="delete" />
             <argument type="service" id="opensky.sitemap.sitemap" />
             <argument type="service" id="opensky.sitemap.dumper" />
         </service>

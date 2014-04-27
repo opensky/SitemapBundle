@@ -19,9 +19,6 @@ class MongoDB implements Dumper
      */
     public function dump(Sitemap $sitemap)
     {
-        // remove the old ones first...
-        $this->getDocumentCollection($sitemap)->remove(array());
-
         // now flush the new ones
         $dm = $this->getDocumentManager($sitemap);
         $dm->flush(null, array('safe' => true));

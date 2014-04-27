@@ -83,6 +83,16 @@ class MongoDB implements Storage
     }
 
     /**
+     * Removes a Url in DocumentManager, does not call flush
+     *
+     * @param OpenSky\Bundle\SitemapBundle\Sitemap\Url $url
+     */
+    public function remove(Url $url)
+    {
+        $this->dm->remove($url);
+    }
+
+    /**
      * @return Doctrine\ODM\MongoDB\DocumentManager
      */
     public function getDocumentManager()
