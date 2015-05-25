@@ -1,5 +1,5 @@
 {
-    "name": "opensky/sitemap-bundle",
+    "name": "os/opensitemap-bundle",
     "description": "Adds a sitemap.xml file!",
     "keywords": [ "sitemap" ],
     "homepage": "https://github.com/opensky/SitemapBundle",
