@@ -23,6 +23,10 @@ class Sitemap
      */
     protected $defaults = array();
     /**
+     * @var array
+     */
+    protected $properties = array();
+    /**
      * @var OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Storage
      */
     protected $storage;
@@ -31,10 +35,11 @@ class Sitemap
      * @param OpenSky\Bundle\SitemapBundle\Sitemap\Storage\Storage $storage
      * @param array $defaults
      */
-    public function __construct(Storage $storage, array $defaults = array())
+    public function __construct(Storage $storage, array $defaults = array(), array $properties = array())
     {
         $this->storage = $storage;
-        foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
+        $this->properties = array_merge(array('changefreq', 'priority', 'lastmod'), $properties);
+        foreach ($this->properties as $prop) {
             if (isset($defaults[$prop])) {
                 $this->defaults[$prop] = $defaults[$prop];
             }
@@ -68,13 +73,18 @@ class Sitemap
         $info     = array_merge($this->defaults, $info);
         $urlClass = $this->getUrlClass();
         $url      = new $urlClass($loc);
-        foreach (array('changefreq', 'priority', 'lastmod') as $prop) {
+        foreach ($this->properties as $prop) {
             if (isset($info[$prop])) {
                 $url->{'set' . ucfirst($prop)}($info[$prop]);
             }
         }
         $this->storage->save($url);
         return $url;
+    }
+
+    public function delete($url)
+    {
+        $this->storage->remove($url);
     }
 
     /**

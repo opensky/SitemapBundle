@@ -15,6 +15,7 @@
         <parameter key="opensky.sitemap.template.engine">twig</parameter>
         <parameter key="opensky.sitemap.defaults" type="collection" />
         <parameter key="opensky.sitemap.providers" type="collection" />
+        <parameter key="opensky.sitemap.properties" type="collection" />
     </parameters>
 
     <services>
@@ -22,6 +23,7 @@
         <service id="opensky.sitemap.sitemap" class="%opensky.sitemap.class%">
             <argument type="service" id="opensky.sitemap.sitemap.storage" />
             <argument>%opensky.sitemap.defaults%</argument>
+            <argument>%opensky.sitemap.properties%</argument>
             <call method="setUrlClass">
                 <argument>%opensky.sitemap.url.class%</argument>
             </call>
@@ -36,8 +38,9 @@
             </argument>
         </service>
         <service id="opensky.sitemap.listener" class="%opensky.sitemap.listener.class%">
-            <tag name="kernel.listener" event="opensky.sitemap.update" method="update" />
-            <tag name="kernel.listener" event="opensky.sitemap.create" method="create" />
+            <tag name="kernel.event_listener" event="opensky.sitemap.update" method="update" />
+            <tag name="kernel.event_listener" event="opensky.sitemap.create" method="create" />
+            <tag name="kernel.event_listener" event="opensky.sitemap.delete" method="delete" />
             <argument type="service" id="opensky.sitemap.sitemap" />
             <argument type="service" id="opensky.sitemap.dumper" />
         </service>
